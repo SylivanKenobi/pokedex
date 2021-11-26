@@ -1,2 +1,4 @@
 requests
 climage
+# https://github.com/PokeAPI/pokebase
+pokebase
