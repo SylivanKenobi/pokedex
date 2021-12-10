@@ -11,7 +11,7 @@ class Canvas:
         'description': {'columns': 25, 'lines': 16, 'start_line': 8, 'start_column': 8},
         'name': {'columns': 25, 'lines': 1, 'start_line': 2, 'start_column': 8},
         'evo': {'columns': 80, 'lines': 4, 'start_line': 16, 'start_column': 0},
-        'image': {'columns': 26, 'lines': 20, 'start_line': 0, 'start_column': 54}
+        'image': {'columns': 25, 'lines': 22, 'start_line': 0, 'start_column': 54}
     }
 
     def create(self):

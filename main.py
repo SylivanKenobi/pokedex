@@ -7,6 +7,7 @@ from canvas import Canvas
 from image import Image
 
 import os
+import sys
 
 def print_color(fg=(0,0,0), bg=(255,255,255), text=" "):
     if type(bg) == "str":
@@ -41,14 +42,13 @@ def create_evolutions_string(evolutions):
                 level {evolutions[1].get('level')}                level {evolutions[2].get('level')}
             """
 
+pokemon_id = sys.argv[1]
+
+canvas = Canvas(85, 22)
+image = Image(pokemon_id)
 
 
-
-canvas = Canvas(85, 20)
-image = Image(4)
-
-
-json = requests.get("https://pokeapi.co/api/v2/pokemon-species/4").json()
+json = requests.get(f'https://pokeapi.co/api/v2/pokemon-species/{pokemon_id}').json()
 poke_desc = json.get('flavor_text_entries')[0].get('flavor_text').replace('\u000c', ' ')
 
 canvas.add('description', poke_desc)
