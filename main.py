@@ -44,7 +44,7 @@ def create_evolutions_string(evolutions):
 
 pokemon_id = sys.argv[1]
 
-canvas = Canvas(85, 22)
+canvas = Canvas(85, 24)
 image = Image(pokemon_id)
 
 
@@ -52,7 +52,7 @@ json = requests.get(f'https://pokeapi.co/api/v2/pokemon-species/{pokemon_id}').j
 poke_desc = json.get('flavor_text_entries')[0].get('flavor_text').replace('\u000c', ' ')
 
 canvas.add('description', poke_desc)
-canvas.add('image', image.get_raw_data())
+canvas.add_image('image', image.get_raw_data())
 canvas.add('evo', create_evolutions_string(get_evolutions()))
 canvas.add('name', json.get('name').title())
 

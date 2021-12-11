@@ -42,3 +42,21 @@ class Canvas:
                     break
             if done:
                 break
+
+    def add_image(self, place_name, image):
+        width, height = image.size
+        text_or_color = 1 if isinstance(image[0], str) else 0
+        placement = self.place[place_name]
+        text = list(image)
+        text_index = 0
+        done = False
+        # TODO: find better way to loop and break
+        for line in range(placement['start_line'], height + 2):
+            for column in range(self.width - width - 2 ,self.width - 2):
+                self.content[line][column][text_or_color] = text[text_index]
+                text_index += 1
+                if text_index >= len(image):
+                    done = True
+                    break
+            if done:
+                break

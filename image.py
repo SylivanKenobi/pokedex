@@ -17,34 +17,47 @@ class Image:
         pokemon = requests.get(f'https://pokeapi.co/api/v2/pokemon/{self.id}').json()
         image_url = pokemon.get("sprites").get("front_default")
         urllib.request.urlretrieve(image_url, 'image.png')
-        image = PImage.open('image.png')
-        left = 18
-        top, bottom = self.crop_height(np.asarray(image))
-        right = 70
-        image = image.crop((left, top, right, bottom))
-        print(image.getbbox())
+        image = PImage.open('image.png').convert('RGB')
+        image = self.crop_height(np.asarray(image))
+        image = self.crop_width(image)
         image = self.resize(image, image.size)
-        image = image.convert('RGB')
-        return image
+        return image.convert('RGB')
 
     def get_raw_data(self):
         return self.content.getdata()
 
     def resize(self, image, size):
-        width = size[0]
-        height = size[1]
-        max_width = 25
-        max_height = 22
-        new_height = int((height / width) * max_width)
-        return image.resize((max_width, new_height))
+        width, height = size
+        max_width, max_height = (25, 22)
 
-# WIP resize array
+        factor_width = max_width/float(width)
+        factor_height = max_height/float(height)
+
+        crop_factor = factor_width if factor_width < factor_height else factor_height
+        new_height,new_width = int(height*crop_factor),int(width*crop_factor)
+
+        return image.resize((new_width, new_height))
+
     def crop_height(self, image):
         non_zero_list = []
-        for i in image:
-            if len(set(i)) > 1:
-                non_zero_list.append(i)
-        # upper = ((non_zero_list[0] - height) / height) - 2
-        # lower = (non_zero_list[-1] / height) + 10
-        PImage.fromarray(image[non_zero_list[0]:non_zero_list[-1]], 'RGB').show()
-        return upper, lower
+        for index, stuff in enumerate(image):
+            if len(np.unique(stuff)) > 1:
+                non_zero_list.append(index)
+        image = np.delete(image, range(0, non_zero_list[0] - 1),0)
+        image = np.delete(image, range(non_zero_list[-1] - non_zero_list[0], len(image)),0)
+        return PImage.fromarray(image, 'RGB')
+
+    def crop_width(self, image):
+        image = np.asarray(image)
+        image = np.rot90(image, 3)
+        non_zero_list = []
+        for index, stuff in enumerate(image):
+            unique = np.unique(stuff)
+            if len(unique) == 1 and unique[0] == 0:
+                bla = 'asdf'
+            else:
+                non_zero_list.append(index)
+        image = np.delete(image, range(0, non_zero_list[0]),0)
+        image = np.delete(image, range(non_zero_list[-1] - non_zero_list[0], len(image)),0)
+        image = np.rot90(image, 1)
+        return PImage.fromarray(image, 'RGB')
